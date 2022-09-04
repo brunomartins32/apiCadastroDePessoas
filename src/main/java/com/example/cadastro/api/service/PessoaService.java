@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.BeanDefinitionDsl.BeanSupplierContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +26,12 @@ public class PessoaService {
 	}
 
 	public ResponseEntity<Optional<Pessoa>> findById(int codigo) {
-		Optional<Pessoa> pessoa = pessoaRepository.findById(codigo);
+		Optional<Pessoa> pessoa = Optional.of(pessoaRepository.findById(codigo).orElseThrow(() -> new IllegalArgumentException("Not found"))); ;
 		return ResponseEntity.ok().body(pessoa);
 	}
 
 	public void deleteById(int codigo) {
+		findById(codigo);
 		pessoaRepository.deleteById(codigo);
 
 	}
@@ -41,5 +41,4 @@ public class PessoaService {
 		BeanUtils.copyProperties(pessoa, atual, "codigo");
 		return pessoaRepository.save(atual);
 	}
-
 }
