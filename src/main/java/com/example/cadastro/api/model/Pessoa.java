@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "pessoa")
@@ -16,13 +15,10 @@ public class Pessoa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int codigo;
-	@NotNull
 	private String nome;
-	private int idade;
+	private Integer idade;
 	private char sexo;
 
-	
-	
 	public int getCodigo() {
 		return codigo;
 	}
@@ -39,11 +35,11 @@ public class Pessoa {
 		this.nome = nome;
 	}
 
-	public int getIdade() {
+	public Integer getIdade() {
 		return idade;
 	}
 
-	public void setIdade(int idade) {
+	public void setIdade(Integer idade) {
 		this.idade = idade;
 	}
 
@@ -57,7 +53,7 @@ public class Pessoa {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(idade, nome, sexo);
+		return Objects.hash(codigo);
 	}
 
 	@Override
@@ -69,7 +65,7 @@ public class Pessoa {
 		if (getClass() != obj.getClass())
 			return false;
 		Pessoa other = (Pessoa) obj;
-		return idade == other.idade && Objects.equals(nome, other.nome) && sexo == other.sexo;
+		return codigo == other.codigo;
 	}
 
 }

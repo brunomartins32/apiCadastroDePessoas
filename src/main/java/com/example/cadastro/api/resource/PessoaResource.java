@@ -1,14 +1,10 @@
 package com.example.cadastro.api.resource;
 
-import java.net.URI;
-import java.util.List;
 import java.util.Optional;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,47 +14,41 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.cadastro.api.model.Pessoa;
-import com.example.cadastro.api.repository.PessoaRepository;
+import com.example.cadastro.api.service.PessoaService;
 
 @RestController
 @RequestMapping("/pessoa")
 public class PessoaResource {
+	// @Autowired
+	// private PessoaRepository pessoaRepository;
+
 	@Autowired
-	private PessoaRepository pessoaRepository;
+	PessoaService pessoaService;
 
 	@PostMapping
-	public ResponseEntity<Pessoa> cadastrar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
-		Pessoa pessoaSalva = pessoaRepository.save(pessoa);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}")
-		.buildAndExpand(pessoaSalva.getCodigo()).toUri();
-		return ResponseEntity.created(uri).body(pessoaSalva);
+	public ResponseEntity<Object> cadastrar(@RequestBody Pessoa pessoa) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.save(pessoa));
 	}
 
 	@GetMapping
-	public List<Pessoa> listar() {
-		return pessoaRepository.findAll();
+	public ResponseEntity<Object> listar() {
+		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.findAll());
 	}
 
 	@GetMapping("/{codigo}")
 	public ResponseEntity<?> buscarPeloId(@PathVariable int codigo) {
-		Optional<Pessoa> pessoa = pessoaRepository.findById(codigo);
-		return !pessoa.isEmpty() ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
+		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.findById(codigo));
+	}
 
-	}
-	
 	@DeleteMapping("/{codigo}")
-	public void remover(@PathVariable int codigo){
-		pessoaRepository.deleteById(codigo);
+	public void remover(@PathVariable int codigo) {
+		pessoaService.deleteById(codigo);
 	}
-	
+
 	@PutMapping("/{codigo}")
-	public Pessoa atualizar(@PathVariable int codigo, @Valid @RequestBody Pessoa pessoa){
-		Pessoa pessoaSalva = pessoaRepository.findById(codigo).get();
-		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo");
-		return pessoaRepository.save(pessoaSalva);
+	public ResponseEntity<Pessoa> atualizar(@PathVariable int codigo, @RequestBody Pessoa pessoa) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.atualizar(codigo, pessoa));
 	}
-	
 }
