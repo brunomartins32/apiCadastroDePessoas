@@ -1,5 +1,6 @@
 package com.example.cadastro.api.resource;
 
+import com.example.cadastro.api.dto.PessoaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.cadastro.api.model.Pessoa;
 import com.example.cadastro.api.service.PessoaService;
 
+//TODO - Mudar o status do ResponseEntity, pode ser ok() a não ser que seja um SAVE, ai seria create
+//TODO - Mudar os tipos do ResponseEntity
+//TODO - Mudar a injeção de dependência
+
 @RestController
 @RequestMapping("/pessoa")
 public class PessoaResource {
@@ -25,7 +30,7 @@ public class PessoaResource {
 	PessoaService pessoaService;
 
 	@PostMapping
-	public ResponseEntity<Object> cadastrar(@RequestBody Pessoa pessoa) {
+	public ResponseEntity<Object> cadastrar(@RequestBody PessoaDTO pessoa) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.save(pessoa));
 	}
 
