@@ -7,7 +7,7 @@ import com.example.cadastro.api.model.Pessoa;
 // esse cara é responsável por passar um dado vindo de fora da API para dentro do banco de dados
 public class PessoaDTO {
 
-    private int codigo;
+    private Long codigo;
     private String nome;
     private Integer idade;
     private char sexo;
@@ -17,7 +17,7 @@ public class PessoaDTO {
 
     }
 
-    public PessoaDTO(int codigo, String nome, Integer idade, char sexo) {
+    public PessoaDTO(Long codigo, String nome, Integer idade, char sexo) {
         this.codigo = codigo;
         this.nome = nome;
         this.idade = idade;
@@ -46,11 +46,11 @@ public class PessoaDTO {
         return p;
     }
 
-    public int getCodigo() {
+    public Long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(Long codigo) {
         this.codigo = codigo;
     }
 

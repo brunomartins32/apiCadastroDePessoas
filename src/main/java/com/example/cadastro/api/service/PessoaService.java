@@ -1,12 +1,12 @@
 package com.example.cadastro.api.service;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import com.example.cadastro.api.dto.PessoaDTO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.cadastro.api.dto.PessoaDTO;
 import com.example.cadastro.api.model.Pessoa;
 import com.example.cadastro.api.repository.PessoaRepository;
 
@@ -33,15 +33,16 @@ public class PessoaService {
 	public PessoaDTO save(PessoaDTO pessoaSalva) {
 		Pessoa pessoa = pessoaSalva.toModel();
 
-		pessoa = pessoaRepository.save(pessoa);
+		pessoaRepository.save(pessoa);
 
 		PessoaDTO pessoaDTO = PessoaDTO.toDTO(pessoa);
 
 		return pessoaDTO;
 	}
 
-	public Object findAll() {
-		return pessoaRepository.findAll();
+
+	public List<PessoaDTO> buscarTodos() {
+		 return pessoaRepository.findAll().stream().map(PessoaDTO::toDTO).collect(Collectors.toList());
 	}
 
 //	public ResponseEntity<Optional<Pessoa>> findById(int codigo) {
@@ -50,28 +51,29 @@ public class PessoaService {
 //	}
 
 	//Aqui está um exemplo do uso do nosso DTO
-	public PessoaDTO findById(int id){
-
-
+	public PessoaDTO findById(Long id){
 		Pessoa pessoa = pessoaRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("not found"));
-
 		//Aqui nós usamos o nosso método para transformar o retorno do método 'FindById' que faz parte do repository
-
 		PessoaDTO pessoaDTO = PessoaDTO.toDTO(pessoa);
-
 		return pessoaDTO;
 	}
 
-	public void deleteById(int codigo) {
+	public void deleteById(Long codigo) {
 		findById(codigo);
 		pessoaRepository.deleteById(codigo);
 
 	}
 
-	public Pessoa atualizar(int codigo, Pessoa pessoa) {
-		Pessoa atual = pessoaRepository.getReferenceById(codigo);
-		BeanUtils.copyProperties(pessoa, atual, "codigo");
-		return pessoaRepository.save(atual);
+	public PessoaDTO atualizar(Long codigo, PessoaDTO pessoadto) {
+		
+		Pessoa pessoaNova = pessoadto.toModel();
+		pessoaNova = pessoaRepository.getReferenceById(codigo);
+		BeanUtils.copyProperties(pessoadto, pessoaNova, "codigo");
+		pessoaRepository.save(pessoaNova);
+		
+		PessoaDTO pessoaDTO = PessoaDTO.toDTO(pessoaNova);
+
+		return pessoaDTO;	
 	}
 }
